@@ -3,22 +3,24 @@
 
 #pragma once
 
+#include <stdint.h>
 #include <platform-i2c.hh>
 
 namespace DS3231
 {
     /// @brief I2C address for the DS3231 RTC module.
-    constexpr uint8_t I2C_ADDRESS      = 0x68;
+    constexpr uint8_t I2C_ADDRESS     = 0x68;
 
-    /// @brief Register address for the ControlRegister in the DS3231.
-    constexpr uint8_t REG_CONTROL      = 0x0E;
+    /// @brief Register address for the Control register in the DS3231.
+    constexpr uint8_t REG_CONTROL     = 0x0E;
 
     /// @brief Register address for DateTime in the DS3231.
-    constexpr uint8_t REG_DATETIME     = 0x00;
+    constexpr uint8_t REG_DATETIME    = 0x00;
 
     /// @brief Register address for Temperature in the DS3231.
-    constexpr uint8_t REG_TEMPERATURE  = 0x11;
+    constexpr uint8_t REG_TEMPERATURE = 0x11;
 
+    /// @brief Enum class representing the AM/PM indicator for 12-hour mode.
     enum class Meridian : uint8_t
     {
         AM = 0,
@@ -62,26 +64,36 @@ namespace DS3231
         uint8_t        minute_tens  : 3;
         uint8_t                     : 1;
         uint8_t        hour_units   : 4;
-        union {
-            struct hour_12 {
-                uint8_t hour_tens   : 1;
-                Meridian meridian     : 1;
-            },
-            struct hour_24 {
+
+        // Union to handle the differences between 12-hour and 24-hour formats.
+        union
+        {
+            struct
+            {
+                uint8_t  hour_tens  : 1;
+                Meridian meridian   : 1;
+            } hour_12;
+
+            struct
+            {
                 uint8_t hour_tens   : 2;
-            }
+            } hour_24;
         };
+
         bool           is_24_hour   : 1;
         uint8_t                     : 1;
         Weekday        weekday      : 3;
         uint8_t                     : 5;
+
         uint8_t        day_units    : 4;
         uint8_t        day_tens     : 2;
         uint8_t                     : 2;
+
         uint8_t        month_units  : 4;
         uint8_t        month_tens   : 1;
         uint8_t                     : 2;
         uint8_t        century      : 1;
+
         uint8_t        year_units   : 4;
         uint8_t        year_tens    : 4;
     };
@@ -89,9 +101,9 @@ namespace DS3231
     /// @brief Structure representing Temperature data stored in the DS3231.
     struct Temperature
     {
-        int8_t         degrees      : 8;
-        uint8_t        quarters     : 2;
-        uint8_t                     : 6;
+        int8_t         degrees      : 8;    // Signed 8-bit integer for degrees.
+        uint8_t        quarters     : 2;    // 2-bit fraction representing 0.25°C increments.
+        uint8_t                     : 6;    // Padding to align to 1 byte.
     };
 
     /// @brief Structure representing a register address with an associated payload.
@@ -99,8 +111,8 @@ namespace DS3231
     template <typename T>
     struct RegisterPayload
     {
-        uint8_t        reg;
-        T              payload;
+        uint8_t        reg;                 // Register address.
+        T              payload;             // Data payload of type T.
 
         RegisterPayload(uint8_t reg, const T& payload)
             : reg(reg), payload(payload)
