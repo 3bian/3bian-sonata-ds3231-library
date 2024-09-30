@@ -1,24 +1,16 @@
-// Copyright 3bian Limited.
+// Copyright 3bian Limited and CHERIoT Contributors.
 // SPDX-License-Identifier: Apache-2.0
 
 #pragma once
 
-#include <stdint.h>
 #include <platform-i2c.hh>
 
 namespace DS3231
 {
-    /// @brief I2C address for the DS3231 RTC module.
-    constexpr uint8_t I2C_ADDRESS     = 0x68;
-
-    /// @brief Register address for the Control register in the DS3231.
-    constexpr uint8_t REG_CONTROL     = 0x0E;
-
-    /// @brief Register address for DateTime in the DS3231.
-    constexpr uint8_t REG_DATETIME    = 0x00;
-
-    /// @brief Register address for Temperature in the DS3231.
-    constexpr uint8_t REG_TEMPERATURE = 0x11;
+    constexpr uint8_t I2CAddress                  = 0x68;
+    constexpr uint8_t ControlRegisterAddress      = 0x0E;
+    constexpr uint8_t DateTimeRegisterAddress     = 0x00;
+    constexpr uint8_t TemperatureRegisterAddress  = 0x11;
 
     /// @brief Enum class representing the AM/PM indicator for 12-hour mode.
     enum class Meridian : uint8_t
@@ -44,58 +36,59 @@ namespace DS3231
     /// @brief Structure representing control data stored in the DS3231.
     struct Control
     {
-        bool           aral         : 1;    // Alarm 1 Interrupt Enable (bit 0)
-        bool           a2ie         : 1;    // Alarm 2 Interrupt Enable (bit 1)
-        bool           intcn        : 1;    // Interrupt Control (bit 2)
-        bool           rs1          : 1;    // Rate Select 1 (bit 3)
-        bool           rs2          : 1;    // Rate Select 2 (bit 4)
-        bool           conv         : 1;    // Convert Temperature (bit 5)
-        bool           bbsqw        : 1;    // Battery-Backed Square-Wave Enable (bit 6)
-        bool           eosc         : 1;    // Enable Oscillator (bit 7)
+        bool           alarm1InterruptEnable          : 1;
+        bool           alarm2InterruptEnable          : 1;
+        bool           interruptControl               : 1;
+        bool           rateSelect1                    : 1;
+        bool           rateSelect2                    : 1;
+        bool           convertTemperature             : 1;
+        bool           batteryBackedSquareWaveEnable  : 1;
+        bool           disableOscillator              : 1;
     };
+
 
     /// @brief Structure representing Date and Time stored in the DS3231 registers.
     struct DateTime
     {
-        uint8_t        second_units : 4;
-        uint8_t        second_tens  : 3;
+        uint8_t        secondUnits  : 4;
+        uint8_t        secondTens   : 3;
         uint8_t                     : 1;
-        uint8_t        minute_units : 4;
-        uint8_t        minute_tens  : 3;
+        uint8_t        minuteUnits  : 4;
+        uint8_t        minuteTens   : 3;
         uint8_t                     : 1;
-        uint8_t        hour_units   : 4;
+        uint8_t        hourUnits    : 4;
 
         // Union to handle the differences between 12-hour and 24-hour formats.
         union
         {
             struct
             {
-                uint8_t  hour_tens  : 1;
+                uint8_t  hourTens   : 1;
                 Meridian meridian   : 1;
-            } hour_12;
+            } hour12;
 
             struct
             {
-                uint8_t hour_tens   : 2;
-            } hour_24;
+                uint8_t hourTens    : 2;
+            } hour24;
         };
 
-        bool           is_24_hour   : 1;
+        bool           is24Hour     : 1;
         uint8_t                     : 1;
         Weekday        weekday      : 3;
         uint8_t                     : 5;
 
-        uint8_t        day_units    : 4;
-        uint8_t        day_tens     : 2;
+        uint8_t        dayUnits     : 4;
+        uint8_t        dayTens      : 2;
         uint8_t                     : 2;
 
-        uint8_t        month_units  : 4;
-        uint8_t        month_tens   : 1;
+        uint8_t        monthUnits   : 4;
+        uint8_t        monthTens    : 1;
         uint8_t                     : 2;
         uint8_t        century      : 1;
 
-        uint8_t        year_units   : 4;
-        uint8_t        year_tens    : 4;
+        uint8_t        yearUnits    : 4;
+        uint8_t        yearTens     : 4;
     };
 
     /// @brief Structure representing Temperature data stored in the DS3231.
@@ -111,11 +104,11 @@ namespace DS3231
     template <typename T>
     struct RegisterPayload
     {
-        uint8_t        reg;                 // Register address.
+        uint8_t        registerAddress;     // Register address.
         T              payload;             // Data payload of type T.
 
-        RegisterPayload(uint8_t reg, const T& payload)
-            : reg(reg), payload(payload)
+        RegisterPayload(uint8_t registerAddress, const T& payload)
+            : registerAddress(registerAddress), payload(payload)
         {
         }
     };
