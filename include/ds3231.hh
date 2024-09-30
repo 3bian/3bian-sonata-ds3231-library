@@ -99,29 +99,29 @@ namespace DS3231
 
     /// @brief Reads the Control register from the DS3231 RTC module.
     /// @param i2c Pointer to an OpenTitanI2c instance used for communication.
-    /// @param control Pointer to a Control structure to store the read data.
+    /// @param control Control structure reference to store the read data.
     /// @return true if the read operation is successful, false otherwise.
-    bool read_control(volatile OpenTitanI2c* i2c, Control* control);
+    bool read_control(volatile OpenTitanI2c* i2c, Control& control);
 
     /// @brief Reads the DateTime from the DS3231 RTC module.
     /// @param i2c Pointer to an OpenTitanI2c instance used for communication.
-    /// @param datetime Pointer to a DateTime structure to store the read data.
+    /// @param datetime DateTime structure reference to store the read data.
     /// @return true if the read operation is successful, false otherwise.
-    bool read_datetime(volatile OpenTitanI2c* i2c, DateTime* datetime);
+    bool read_datetime(volatile OpenTitanI2c* i2c, DateTime& datetime);
 
     /// @brief Reads the Temperature from the DS3231 RTC module.
     /// @param i2c Pointer to an OpenTitanI2c instance used for communication.
-    /// @param temperature Pointer to a Temperature structure to store the read data.
+    /// @param temperature Temperature structure reference to store the read data.
     /// @return true if the read operation is successful, false otherwise.
-    bool read_temperature(volatile OpenTitanI2c* i2c, Temperature* temperature);
+    bool read_temperature(volatile OpenTitanI2c* i2c, Temperature& temperature);
 
     /// @brief Writes the Control register to the DS3231 RTC module.
     /// @param i2c Pointer to an OpenTitanI2c instance used for communication.
-    /// @param control Pointer to a Control structure containing the data to write.
-    void write_control(volatile OpenTitanI2c* i2c, const Control* control);
+    /// @param control Control structure reference containing the data to write.
+    void write_control(volatile OpenTitanI2c* i2c, const Control& control);
 
     /// @brief Writes the DateTime to the DS3231 RTC module.
     /// @param i2c Pointer to an OpenTitanI2c instance used for communication.
-    /// @param datetime Pointer to a DateTime structure containing the data to write.
-    void write_datetime(volatile OpenTitanI2c* i2c, const DateTime* datetime);
+    /// @param datetime DateTime structure reference containing the data to write.
+    void write_datetime(volatile OpenTitanI2c* i2c, const DateTime& datetime);
 }
