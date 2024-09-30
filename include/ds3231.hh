@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include <stdint.h>
 #include <platform-i2c.hh>
 
 namespace DS3231
@@ -19,6 +18,12 @@ namespace DS3231
 
     /// @brief Register address for Temperature in the DS3231.
     constexpr uint8_t REG_TEMPERATURE  = 0x11;
+
+    enum class Meridian : uint8_t
+    {
+        AM = 0,
+        PM = 1
+    };
 
     /// @brief Enum class representing days of the week for the DS3231.
     enum class Weekday : uint8_t 
@@ -57,7 +62,15 @@ namespace DS3231
         uint8_t        minute_tens  : 3;
         uint8_t                     : 1;
         uint8_t        hour_units   : 4;
-        uint8_t        hour_tens    : 2;
+        union {
+            struct hour_12 {
+                uint8_t hour_tens   : 1;
+                Meridian meridian     : 1;
+            },
+            struct hour_24 {
+                uint8_t hour_tens   : 2;
+            }
+        };
         bool           is_24_hour   : 1;
         uint8_t                     : 1;
         Weekday        weekday      : 3;
