@@ -5,43 +5,258 @@
 
 namespace DS3231
 {
-    bool read_control(volatile OpenTitanI2c* i2c, Control& control)
-    {
-        i2c->blocking_write(I2CAddress, &ControlRegisterAddress, sizeof(ControlRegisterAddress), true);
+	Control::Control()
+	{
+	}
 
-        auto* readBuffer = reinterpret_cast<uint8_t*>(&control);
-        return i2c->blocking_read(I2CAddress, readBuffer, sizeof(Control));
-    }
+	bool Control::get_alarm1_interrupt_enable() const
+	{
+		return extract_bits(registers, 0x00, 0x0, 0x1);
+	}
 
-    bool read_datetime(volatile OpenTitanI2c* i2c, DateTime& datetime)
-    {
-        i2c->blocking_write(I2CAddress, &DateTimeRegisterAddress, sizeof(DateTimeRegisterAddress), true);
+	void Control::set_alarm1_interrupt_enable(bool enable)
+	{
+		assign_bits(registers, 0x00, 0x0, 0x1, enable ? 1 : 0);
+	}
 
-        auto* readBuffer = reinterpret_cast<uint8_t*>(&datetime);
-        return i2c->blocking_read(I2CAddress, readBuffer, sizeof(DateTime));
-    }
+	bool Control::get_alarm2_interrupt_enable() const
+	{
+		return extract_bits(registers, 0x00, 0x1, 0x1);
+	}
 
-    bool read_temperature(volatile OpenTitanI2c* i2c, Temperature& temperature)
-    {
-        i2c->blocking_write(I2CAddress, &TemperatureRegisterAddress, sizeof(TemperatureRegisterAddress), true);
+	void Control::set_alarm2_interrupt_enable(bool enable)
+	{
+		assign_bits(registers, 0x00, 0x1, 0x1, enable ? 1 : 0);
+	}
 
-        auto* readBuffer = reinterpret_cast<uint8_t*>(&temperature);
-        return i2c->blocking_read(I2CAddress, readBuffer, sizeof(Temperature));
-    }
+	bool Control::get_interrupt_control() const
+	{
+		return extract_bits(registers, 0x00, 0x2, 0x1);
+	}
 
-    void write_control(volatile OpenTitanI2c* i2c, const Control& control)
-    {
-        RegisterPayload<Control> payload(ControlRegisterAddress, control);
+	void Control::set_interrupt_control(bool enable)
+	{
+		assign_bits(registers, 0x00, 0x2, 0x1, enable ? 1 : 0);
+	}
 
-        auto* writeBuffer = reinterpret_cast<uint8_t*>(&payload);
-        i2c->blocking_write(I2CAddress, writeBuffer, sizeof(RegisterPayload<Control>), true);
-    }
+	bool Control::get_rate_select1() const
+	{
+		return extract_bits(registers, 0x00, 0x3, 0x1);
+	}
 
-    void write_datetime(volatile OpenTitanI2c* i2c, const DateTime& datetime)
-    {
-        RegisterPayload<DateTime> payload(DateTimeRegisterAddress, datetime);
+	void Control::set_rate_select1(bool enable)
+	{
+		assign_bits(registers, 0x00, 0x3, 0x1, enable ? 1 : 0);
+	}
 
-        auto* writeBuffer = reinterpret_cast<uint8_t*>(&payload);
-        i2c->blocking_write(I2CAddress, writeBuffer, sizeof(RegisterPayload<DateTime>), true);
-    }
+	bool Control::get_rate_select2() const
+	{
+		return extract_bits(registers, 0x00, 0x4, 0x1);
+	}
+
+	void Control::set_rate_select2(bool enable)
+	{
+		assign_bits(registers, 0x00, 0x4, 0x1, enable ? 1 : 0);
+	}
+
+	bool Control::get_convert_temperature() const
+	{
+		return extract_bits(registers, 0x00, 0x5, 0x1);
+	}
+
+	void Control::set_convert_temperature(bool enable)
+	{
+		assign_bits(registers, 0x00, 0x5, 0x1, enable ? 1 : 0);
+	}
+
+	bool Control::get_battery_backed_square_wave_enable() const
+	{
+		return extract_bits(registers, 0x00, 0x6, 0x1);
+	}
+
+	void Control::set_battery_backed_square_wave_enable(bool enable)
+	{
+		assign_bits(registers, 0x00, 0x6, 0x1, enable ? 1 : 0);
+	}
+
+	bool Control::get_disable_oscillator() const
+	{
+		return extract_bits(registers, 0x00, 0x7, 0x1);
+	}
+
+	void Control::set_disable_oscillator(bool enable)
+	{
+		assign_bits(registers, 0x00, 0x7, 0x1, enable ? 1 : 0);
+	}
+
+	const std::array<uint8_t, 1>& Control::get_registers() const
+	{
+		return registers;
+	}
+
+	DateTime::DateTime() : registers{0}
+	{
+	}
+
+	uint8_t DateTime::get_seconds() const
+	{
+		return extract_bcd_bits(registers, 0x00, 0x0, 0x4, 0x4, 0x3);
+	}
+
+	void DateTime::set_seconds(uint8_t seconds)
+	{
+		assign_bcd_bits(registers, 0x00, seconds, 0x0, 0x4, 0x4, 0x3);
+	}
+
+	uint8_t DateTime::get_minutes() const
+	{
+		return extract_bcd_bits(registers, 0x01, 0x0, 0x4, 0x4, 0x3);
+	}
+
+	void DateTime::set_minutes(uint8_t minutes)
+	{
+		assign_bcd_bits(registers, 0x01, minutes, 0x0, 0x4, 0x4, 0x3);
+	}
+
+	uint8_t DateTime::get_hours() const
+	{
+		return extract_bcd_bits(registers, 0x02, 0x0, 0x4, 0x4, 0x2);
+	}
+
+	void DateTime::set_hours(uint8_t hours)
+	{
+		assign_bcd_bits(registers, 0x02, hours, 0x0, 0x4, 0x4, 0x2);
+	}
+
+	bool DateTime::is_international_time() const
+	{
+		return extract_bits(registers, 0x02, 0x6, 0x1);
+	}
+
+	void DateTime::set_international_time(bool enable)
+	{
+		assign_bits(registers, 0x02, 0x6, 0x1, enable ? 1 : 0);
+	}
+
+	Meridian DateTime::get_meridian() const
+	{
+		return static_cast<Meridian>(extract_bits(registers, 0x02, 0x5, 0x1));
+	}
+
+	void DateTime::set_meridian(Meridian meridian)
+	{
+		assign_bits(registers, 0x02, 0x5, 0x1, static_cast<uint8_t>(meridian));
+	}
+
+	Weekday DateTime::get_weekday() const
+	{
+		return static_cast<Weekday>(extract_bits(registers, 0x03, 0x0, 0x2));
+	}
+
+	void DateTime::set_weekday(Weekday weekday)
+	{
+		assign_bits(registers, 0x03, 0x0, 0x2, static_cast<uint8_t>(weekday));
+	}
+
+	uint8_t DateTime::get_day() const
+	{
+		return extract_bcd_bits(registers, 0x04, 0x0, 0x4, 0x4, 0x2);
+	}
+
+	void DateTime::set_day(uint8_t day)
+	{
+		assign_bcd_bits(registers, 0x04, day, 0x0, 0x4, 0x4, 0x2);
+	}
+
+	bool DateTime::get_century() const
+	{
+		return extract_bits(registers, 0x05, 0x7, 0x1);
+	}
+
+	void DateTime::set_century(bool century)
+	{
+		assign_bits(registers, 0x05, 0x7, 0x1, century ? 1 : 0);
+	}
+
+	uint8_t DateTime::get_month() const
+	{
+		return extract_bcd_bits(registers, 0x05, 0x0, 0x4, 0x4, 0x2);
+	}
+
+	void DateTime::set_month(uint8_t month)
+	{
+		assign_bcd_bits(registers, 0x05, month, 0x0, 0x4, 0x4, 0x2);
+	}
+
+	uint8_t DateTime::get_year() const
+	{
+		return extract_bcd_bits(registers, 0x06, 0x0, 0x4, 0x4, 0x4);
+	}
+
+	void DateTime::set_year(uint8_t year)
+	{
+		assign_bcd_bits(registers, 0x06, year, 0x0, 0x4, 0x4, 0x4);
+	}
+
+	const std::array<uint8_t, 7>& DateTime::get_registers() const
+	{
+		return registers;
+	}
+
+	Temperature::Temperature() : registers{0}
+	{
+	}
+
+	int8_t Temperature::get_degrees() const
+	{
+		return static_cast<int8_t>(extract_bits(registers, 0x00, 0x0, 0x8));
+	}
+
+	uint8_t Temperature::get_quarters() const
+	{
+		return extract_bits(registers, 0x01, 0x6, 0x2);
+	}
+
+	const std::array<uint8_t, 2>& Temperature::get_registers() const
+	{
+		return registers;
+	}
+
+	bool read_control(volatile OpenTitanI2c* i2c, Control& control)
+	{
+		static const uint8_t reg = 0x0E;
+		i2c->blocking_write(0x68, &reg, sizeof(reg), true);
+		auto* read_buffer = const_cast<uint8_t*>(control.get_registers().data());
+		return i2c->blocking_read(0x68, read_buffer, control.get_registers().size());
+	}
+
+	bool read_datetime(volatile OpenTitanI2c* i2c, DateTime& datetime)
+	{
+		static const uint8_t reg = 0x00;
+		i2c->blocking_write(0x68, &reg, sizeof(reg), true);
+		auto* read_buffer = const_cast<uint8_t*>(datetime.get_registers().data());
+		return i2c->blocking_read(0x68, read_buffer, datetime.get_registers().size());
+	}
+
+	bool read_temperature(volatile OpenTitanI2c* i2c, Temperature& temperature)
+	{
+		static const uint8_t reg = 0x11;
+		i2c->blocking_write(0x68, &reg, sizeof(reg), true);
+		auto* read_buffer = const_cast<uint8_t*>(temperature.get_registers().data());
+		return i2c->blocking_read(0x68, read_buffer, temperature.get_registers().size());
+	}
+
+	void write_control(volatile OpenTitanI2c* i2c, const Control& control)
+	{
+		RegisterPayload<std::array<uint8_t, 1>> payload(0x0E, control.get_registers());
+		auto* writeBuffer = reinterpret_cast<const uint8_t*>(&payload);
+		i2c->blocking_write(0x68, writeBuffer, sizeof(payload), true);
+	}
+
+	void write_datetime(volatile OpenTitanI2c* i2c, const DateTime& datetime)
+	{
+		RegisterPayload<std::array<uint8_t, 7>> payload(0x00, datetime.get_registers());
+		auto* writeBuffer = reinterpret_cast<const uint8_t*>(&payload);
+		i2c->blocking_write(0x68, writeBuffer, sizeof(payload), true);
+	}
 }
