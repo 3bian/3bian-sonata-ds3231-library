@@ -127,11 +127,56 @@ namespace DS3231
 		}
 	};
 
-	bool read_control(volatile OpenTitanI2c* i2c, Control& control);
-	bool read_datetime(volatile OpenTitanI2c* i2c, DateTime& datetime);
-	bool read_temperature(volatile OpenTitanI2c* i2c, Temperature& temperature);
-	void write_control(volatile OpenTitanI2c* i2c, const Control& control);
-	void write_datetime(volatile OpenTitanI2c* i2c, const DateTime& datetime);
+	template <typename T>
+	concept I2c = requires(volatile T* t, const uint8_t addr, uint8_t buf[],
+		const uint32_t numBytes, const bool skipStop)
+	{
+		{ t->blocking_read(addr, buf, numBytes) } -> std::same_as<bool>;
+		{ t->blocking_write(addr, buf, numBytes, skipStop) } -> std::same_as<void>;
+	};
+
+	template <I2c T>
+	bool read_control(volatile T* i2c, Control& control)
+	{
+		static const uint8_t reg = 0x0E;
+		i2c->blocking_write(0x68, &reg, sizeof(reg), true);
+		auto* read_buffer = const_cast<uint8_t*>(control.get_registers().data());
+		return i2c->blocking_read(0x68, read_buffer, control.get_registers().size());
+	}
+
+	template <I2c T>
+	bool read_datetime(volatile T* i2c, DateTime& datetime)
+	{
+		static const uint8_t reg = 0x00;
+		i2c->blocking_write(0x68, &reg, sizeof(reg), true);
+		auto* read_buffer = const_cast<uint8_t*>(datetime.get_registers().data());
+		return i2c->blocking_read(0x68, read_buffer, datetime.get_registers().size());
+	}
+
+	template <I2c T>
+	bool read_temperature(volatile T* i2c, Temperature& temperature)
+	{
+		static const uint8_t reg = 0x11;
+		i2c->blocking_write(0x68, &reg, sizeof(reg), true);
+		auto* read_buffer = const_cast<uint8_t*>(temperature.get_registers().data());
+		return i2c->blocking_read(0x68, read_buffer, temperature.get_registers().size());
+	}
+
+	template <I2c T>
+	void write_control(volatile T* i2c, const Control& control)
+	{
+		RegisterPayload<std::array<uint8_t, 1>> payload(0x0E, control.get_registers());
+		auto* writeBuffer = reinterpret_cast<const uint8_t*>(&payload);
+		i2c->blocking_write(0x68, writeBuffer, sizeof(payload), true);
+	}
+
+	template <I2c T>
+	void write_datetime(volatile T* i2c, const DateTime& datetime)
+	{
+		RegisterPayload<std::array<uint8_t, 7>> payload(0x00, datetime.get_registers());
+		auto* writeBuffer = reinterpret_cast<const uint8_t*>(&payload);
+		i2c->blocking_write(0x68, writeBuffer, sizeof(payload), true);
+	}
 
 	template <size_t N>
 	inline void assign_bits(std::array<uint8_t, N>& buffer, uint8_t index,
