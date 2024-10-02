@@ -1,4 +1,4 @@
-// Copyright 3bian Limited.
+// Copyright 3bian Limited and CHERIoT Contributors.
 // SPDX-License-Identifier: Apache-2.0
 
 #include "ds3231.hh"
