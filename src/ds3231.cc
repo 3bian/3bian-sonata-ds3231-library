@@ -120,7 +120,12 @@ namespace DS3231
 
 	uint8_t DateTime::get_hours() const
 	{
-		return extract_bcd_bits(registers, 0x02, 0x0, 0x4, 0x4, 0x2);
+		if (is_international_time())
+		{
+			return extract_bcd_bits(registers, 0x02, 0x0, 0x4, 0x4, 0x2);
+		}
+
+		return extract_bcd_bits(registers, 0x02, 0x0, 0x4, 0x4, 0x1);
 	}
 
 	void DateTime::set_hours(uint8_t hours)
