@@ -4,7 +4,6 @@
 #pragma once
 
 #include <array>
-#include <platform-i2c.hh>
 
 namespace DS3231
 {
