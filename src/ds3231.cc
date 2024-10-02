@@ -145,7 +145,17 @@ namespace DS3231
 
 	Meridian DateTime::get_meridian() const
 	{
-		return static_cast<Meridian>(extract_bits(registers, 0x02, 0x5, 0x1));
+		if (!is_international_time())
+		{
+			return static_cast<Meridian>(extract_bits(registers, 0x02, 0x5, 0x1));
+		}
+
+		if (get_hours() < 12)
+		{
+			return Meridian::AM;
+		}
+
+		return Meridian::PM;
 	}
 
 	void DateTime::set_meridian(Meridian meridian)
