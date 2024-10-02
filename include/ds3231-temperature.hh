@@ -32,13 +32,13 @@ namespace DS3231
 	template <I2c T>
 	int8_t Temperature<T>::degrees()
 	{
-		return static_cast<int8_t>(extract_bits(registers, 0x00, 0x0, 0x8));
+		return static_cast<int8_t>(extract_bits(registers, sizeof(registers), 0x00, 0x0, 0x8));
 	}
 
 	template <I2c T>
 	uint8_t Temperature<T>::quarters()
 	{
-		return extract_bits(registers, 0x00, 0x6, 0x2);
+		return extract_bits(registers, sizeof(registers), 0x00, 0x6, 0x2);
 	}
 
 	template <I2c T>

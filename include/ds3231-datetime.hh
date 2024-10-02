@@ -77,25 +77,25 @@ namespace DS3231
 	template <I2c T>
 	uint8_t DateTime<T>::seconds()
 	{
-		return extract_bcd_bits(registers, 0x00, 0x0, 0x4, 0x4, 0x3);
+		return extract_bcd_bits(registers, sizeof(registers), 0x00, 0x0, 0x4, 0x4, 0x3);
 	}
 
 	template <I2c T>
 	void DateTime<T>::set_seconds(uint8_t seconds)
 	{
-		assign_bcd_bits(registers, 0x00, seconds, 0x0, 0x4, 0x4, 0x3);
+		assign_bcd_bits(registers, sizeof(registers), 0x00, seconds, 0x0, 0x4, 0x4, 0x3);
 	}
 
 	template <I2c T>
 	uint8_t DateTime<T>::minutes()
 	{
-		return extract_bcd_bits(registers, 0x01, 0x0, 0x4, 0x4, 0x3);
+		return extract_bcd_bits(registers, sizeof(registers), 0x01, 0x0, 0x4, 0x4, 0x3);
 	}
 
 	template <I2c T>
 	void DateTime<T>::set_minutes(uint8_t minutes)
 	{
-		assign_bcd_bits(registers, 0x01, minutes, 0x0, 0x4, 0x4, 0x3);
+		assign_bcd_bits(registers, sizeof(registers), 0x01, minutes, 0x0, 0x4, 0x4, 0x3);
 	}
 
 	template <I2c T>
@@ -103,28 +103,28 @@ namespace DS3231
 	{
 		if (is_international_time())
 		{
-			return extract_bcd_bits(registers, 0x02, 0x0, 0x4, 0x4, 0x2);
+			return extract_bcd_bits(registers, sizeof(registers), 0x02, 0x0, 0x4, 0x4, 0x2);
 		}
 
-		return extract_bcd_bits(registers, 0x02, 0x0, 0x4, 0x4, 0x1);
+		return extract_bcd_bits(registers, sizeof(registers), 0x02, 0x0, 0x4, 0x4, 0x1);
 	}
 
 	template <I2c T>
 	void DateTime<T>::set_hours(uint8_t hours)
 	{
-		assign_bcd_bits(registers, 0x02, hours, 0x0, 0x4, 0x4, 0x2);
+		assign_bcd_bits(registers, sizeof(registers), 0x02, hours, 0x0, 0x4, 0x4, 0x2);
 	}
 
 	template <I2c T>
 	bool DateTime<T>::is_international_time()
 	{
-		return extract_bits(registers, 0x02, 0x6, 0x1);
+		return extract_bits(registers, sizeof(registers), 0x02, 0x6, 0x1);
 	}
 
 	template <I2c T>
 	void DateTime<T>::set_international_time(bool enable)
 	{
-		assign_bits(registers, 0x02, 0x6, 0x1, enable ? 1 : 0);
+		assign_bits(registers, sizeof(registers), 0x02, 0x6, 0x1, enable ? 1 : 0);
 	}
 
 	template <I2c T>
@@ -132,7 +132,7 @@ namespace DS3231
 	{
 		if (!is_international_time())
 		{
-			return static_cast<Meridian>(extract_bits(registers, 0x02, 0x5, 0x1));
+			return static_cast<Meridian>(extract_bits(registers, sizeof(registers), 0x02, 0x5, 0x1));
 		}
 
 		if (hours() < 12)
@@ -146,67 +146,67 @@ namespace DS3231
 	template <I2c T>
 	void DateTime<T>::set_meridian(Meridian meridian)
 	{
-		assign_bits(registers, 0x02, 0x5, 0x1, static_cast<uint8_t>(meridian));
+		assign_bits(registers, sizeof(registers), 0x02, 0x5, 0x1, static_cast<uint8_t>(meridian));
 	}
 
 	template <I2c T>
 	Weekday DateTime<T>::weekday()
 	{
-		return static_cast<Weekday>(extract_bits(registers, 0x03, 0x0, 0x2));
+		return static_cast<Weekday>(extract_bits(registers, sizeof(registers), 0x03, 0x0, 0x2));
 	}
 
 	template <I2c T>
 	void DateTime<T>::set_weekday(Weekday weekday)
 	{
-		assign_bits(registers, 0x03, 0x0, 0x2, static_cast<uint8_t>(weekday));
+		assign_bits(registers, sizeof(registers), 0x03, 0x0, 0x2, static_cast<uint8_t>(weekday));
 	}
 
 	template <I2c T>
 	uint8_t DateTime<T>::day()
 	{
-		return extract_bcd_bits(registers, 0x04, 0x0, 0x4, 0x4, 0x2);
+		return extract_bcd_bits(registers, sizeof(registers), 0x04, 0x0, 0x4, 0x4, 0x2);
 	}
 
 	template <I2c T>
 	void DateTime<T>::set_day(uint8_t day)
 	{
-		assign_bcd_bits(registers, 0x04, day, 0x0, 0x4, 0x4, 0x2);
+		assign_bcd_bits(registers, sizeof(registers), 0x04, day, 0x0, 0x4, 0x4, 0x2);
 	}
 
 	template <I2c T>
 	bool DateTime<T>::century()
 	{
-		return extract_bits(registers, 0x05, 0x7, 0x1);
+		return extract_bits(registers, sizeof(registers), 0x05, 0x7, 0x1);
 	}
 
 	template <I2c T>
 	void DateTime<T>::set_century(bool century)
 	{
-		assign_bits(registers, 0x05, 0x7, 0x1, century ? 1 : 0);
+		assign_bits(registers, sizeof(registers), 0x05, 0x7, 0x1, century ? 1 : 0);
 	}
 
 	template <I2c T>
 	uint8_t DateTime<T>::month()
 	{
-		return extract_bcd_bits(registers, 0x05, 0x0, 0x4, 0x4, 0x2);
+		return extract_bcd_bits(registers, sizeof(registers), 0x05, 0x0, 0x4, 0x4, 0x2);
 	}
 
 	template <I2c T>
 	void DateTime<T>::set_month(uint8_t month)
 	{
-		assign_bcd_bits(registers, 0x05, month, 0x0, 0x4, 0x4, 0x2);
+		assign_bcd_bits(registers, sizeof(registers), 0x05, month, 0x0, 0x4, 0x4, 0x2);
 	}
 
 	template <I2c T>
 	uint8_t DateTime<T>::year()
 	{
-		return extract_bcd_bits(registers, 0x06, 0x0, 0x4, 0x4, 0x4);
+		return extract_bcd_bits(registers, sizeof(registers), 0x06, 0x0, 0x4, 0x4, 0x4);
 	}
 
 	template <I2c T>
 	void DateTime<T>::set_year(uint8_t year)
 	{
-		assign_bcd_bits(registers, 0x06, year, 0x0, 0x4, 0x4, 0x4);
+		assign_bcd_bits(registers, sizeof(registers), 0x06, year, 0x0, 0x4, 0x4, 0x4);
 	}
 
 	template <I2c T>

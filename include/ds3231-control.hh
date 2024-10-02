@@ -54,97 +54,97 @@ namespace DS3231
 	template <I2c T>
 	bool Control<T>::alarm1_interrupt_enable()
 	{
-		return extract_bits(registers, 0x00, 0x0, 0x1);
+		return extract_bits(registers, sizeof(registers), 0x00, 0x0, 0x1);
 	}
 
 	template <I2c T>
 	void Control<T>::set_alarm1_interrupt_enable(bool enable)
 	{
-		assign_bits(registers, 0x00, 0x0, 0x1, enable ? 1 : 0);
+		assign_bits(registers, sizeof(registers), 0x00, 0x0, 0x1, enable ? 1 : 0);
 	}
 
 	template <I2c T>
 	bool Control<T>::alarm2_interrupt_enable()
 	{
-		return extract_bits(registers, 0x00, 0x1, 0x1);
+		return extract_bits(registers, sizeof(registers), 0x00, 0x1, 0x1);
 	}
 
 	template <I2c T>
 	void Control<T>::set_alarm2_interrupt_enable(bool enable)
 	{
-		assign_bits(registers, 0x00, 0x1, 0x1, enable ? 1 : 0);
+		assign_bits(registers, sizeof(registers), 0x00, 0x1, 0x1, enable ? 1 : 0);
 	}
 
 	template <I2c T>
 	bool Control<T>::interrupt_control()
 	{
-		return extract_bits(registers, 0x00, 0x2, 0x1);
+		return extract_bits(registers, sizeof(registers), 0x00, 0x2, 0x1);
 	}
 
 	template <I2c T>
 	void Control<T>::set_interrupt_control(bool enable)
 	{
-		assign_bits(registers, 0x00, 0x2, 0x1, enable ? 1 : 0);
+		assign_bits(registers, sizeof(registers), 0x00, 0x2, 0x1, enable ? 1 : 0);
 	}
 
 	template <I2c T>
 	bool Control<T>::rate_select1()
 	{
-		return extract_bits(registers, 0x00, 0x3, 0x1);
+		return extract_bits(registers, sizeof(registers), 0x00, 0x3, 0x1);
 	}
 
 	template <I2c T>
 	void Control<T>::set_rate_select1(bool enable)
 	{
-		assign_bits(registers, 0x00, 0x3, 0x1, enable ? 1 : 0);
+		assign_bits(registers, sizeof(registers), 0x00, 0x3, 0x1, enable ? 1 : 0);
 	}
 
 	template <I2c T>
 	bool Control<T>::rate_select2()
 	{
-		return extract_bits(registers, 0x00, 0x4, 0x1);
+		return extract_bits(registers, sizeof(registers), 0x00, 0x4, 0x1);
 	}
 
 	template <I2c T>
 	void Control<T>::set_rate_select2(bool enable)
 	{
-		assign_bits(registers, 0x00, 0x4, 0x1, enable ? 1 : 0);
+		assign_bits(registers, sizeof(registers), 0x00, 0x4, 0x1, enable ? 1 : 0);
 	}
 
 	template <I2c T>
 	bool Control<T>::convert_temperature()
 	{
-		return extract_bits(registers, 0x00, 0x5, 0x1);
+		return extract_bits(registers, sizeof(registers), 0x00, 0x5, 0x1);
 	}
 
 	template <I2c T>
 	void Control<T>::set_convert_temperature(bool enable)
 	{
-		assign_bits(registers, 0x00, 0x5, 0x1, enable ? 1 : 0);
+		assign_bits(registers, sizeof(registers), 0x00, 0x5, 0x1, enable ? 1 : 0);
 	}
 
 	template <I2c T>
 	bool Control<T>::battery_backed_square_wave_enable()
 	{
-		return extract_bits(registers, 0x00, 0x6, 0x1);
+		return extract_bits(registers, sizeof(registers), 0x00, 0x6, 0x1);
 	}
 
 	template <I2c T>
 	void Control<T>::set_battery_backed_square_wave_enable(bool enable)
 	{
-		assign_bits(registers, 0x00, 0x6, 0x1, enable ? 1 : 0);
+		assign_bits(registers, sizeof(registers), 0x00, 0x6, 0x1, enable ? 1 : 0);
 	}
 
 	template <I2c T>
 	bool Control<T>::disable_oscillator()
 	{
-		return extract_bits(registers, 0x00, 0x7, 0x1);
+		return extract_bits(registers, sizeof(registers), 0x00, 0x7, 0x1);
 	}
 
 	template <I2c T>
 	void Control<T>::set_disable_oscillator(bool enable)
 	{
-		assign_bits(registers, 0x00, 0x7, 0x1, enable ? 1 : 0);
+		assign_bits(registers, sizeof(registers), 0x00, 0x7, 0x1, enable ? 1 : 0);
 	}
 
 	template <I2c T>
