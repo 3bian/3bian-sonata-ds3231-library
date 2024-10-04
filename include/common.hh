@@ -23,5 +23,5 @@ template<uint8_t offset, uint8_t count>
 inline uint8_t extract_bits(const uint8_t byte)
 {
     static_assert((offset + count) <= 8, "Invalid bit range in extract");
-    return byte >> offset) & ((1u << count) - 1u);
+    return (byte >> offset) & ((1u << count) - 1u);
 }
