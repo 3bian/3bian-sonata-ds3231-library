@@ -15,7 +15,7 @@ namespace DS3231
 
 		int8_t whole()
 		{
-			return static_cast<int8_t>(extract_bits<0, 8>(registers[0]));
+			return registers[0];
 		}
 
 		uint8_t quarters()
@@ -26,7 +26,6 @@ namespace DS3231
 		bool retrieve()
 		{
 			const uint8_t address = 0x11;
-
 			i2c->blocking_write(0x68, &address, sizeof(address), true);
 			return i2c->blocking_read(0x68, registers, sizeof(registers));
 		}
