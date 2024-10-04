@@ -1,3 +1,6 @@
+// Copyright 3bian Limited and CHERIoT Contributors.
+// SPDX-License-Identifier: Apache-2.0
+
 #pragma once
 
 #include "common.hh"
