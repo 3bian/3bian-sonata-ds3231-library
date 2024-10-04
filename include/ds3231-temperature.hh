@@ -13,12 +13,12 @@ namespace DS3231
 		{
 		}
 
-		int8_t temperature_whole()
+		int8_t whole()
 		{
 			return static_cast<int8_t>(extract_bits<0, 8>(registers[0]));
 		}
 
-		uint8_t temperature_quarters()
+		uint8_t quarters()
 		{
 			return extract_bits<6, 2>(registers[1]);
 		}
