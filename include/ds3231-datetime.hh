@@ -76,7 +76,7 @@ namespace DS3231
 			assign_bits<6, 1>(&registers[2], value);
 		}
 
-		uint8_t meridian()
+		bool is_pm()
 		{
 			if (!is_24_hour_time())
 			{
@@ -84,15 +84,15 @@ namespace DS3231
 			}
 			else if (hours() < 12)
 			{
-				return 0;
+				return false;
 			}
 			else
 			{
-				return 1;
+				return true;
 			}
 		}
 
-		void set_meridian(bool value)
+		void set_is_pm(bool value)
 		{
 			assign_bits<5, 1>(&registers[2], value);
 		}
