@@ -16,16 +16,15 @@ namespace AS6212
 		{
 		}
 
-		int16_t whole()
+		int64_t microdegrees()
 		{
-			uint8_t msb = registers[0];
-			uint8_t lsb = extract_bits<7, 1>(registers[1]);
-			return (msb << 1) | lsb;
+			int16_t aggregatedValue = (registers[0] << 8) | registers[1];
+			return aggregatedValue * 1000000LL / 128;
 		}
 
-		uint8_t fraction()
+		int16_t degrees()
 		{
-			return extract_bits<0, 7>(registers[1]);
+			return microdegrees() / 1000000;
 		}
 
 		bool retrieve()
