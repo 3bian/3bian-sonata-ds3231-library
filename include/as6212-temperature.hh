@@ -18,7 +18,7 @@ namespace AS6212
 
 		int64_t microdegrees()
 		{
-			int16_t aggregatedValue = (registers[0] << 8) | registers[1];
+			int16_t aggregatedValue = static_cast<int6_t>((registers[0] << 8) | registers[1]);
 			return aggregatedValue * 1000000LL / 128;
 		}
 
