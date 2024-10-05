@@ -16,14 +16,15 @@ namespace DS3231
 		{
 		}
 
-		int8_t whole()
+		int8_t degrees()
 		{
 			return registers[0];
 		}
 
-		uint8_t quarters()
+		int64_t microdegrees()
 		{
-			return extract_bits<6, 2>(registers[1]);
+			uint8_t quarters = extract_bits<6, 2>(registers[1]);
+			return degrees() * 1000000 + quarters * 250000;
 		}
 
 		bool retrieve()
